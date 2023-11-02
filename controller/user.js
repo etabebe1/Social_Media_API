@@ -80,17 +80,17 @@ const getUserById = async (req, res) => {
 };
 
 // get a user by parameter
-const getUserByParams = async (req, res) => {
-  const { id } = req.params;
+// const getUserByParams = async (req, res) => {
+//   const { id } = req.params;
 
-  const user = await User.findOne({ _id: id });
-  if (!user) {
-    throw new NotFoundError("User not found");
-  }
+//   const user = await User.findOne({ _id: id });
+//   if (!user) {
+//     throw new NotFoundError("User not found");
+//   }
 
-  const { password, updatedAt, ...other } = user._doc;
-  res.send(other);
-};
+//   const { password, updatedAt, ...other } = user._doc;
+//   res.send(other);
+// };
 
 // follow user
 const followUser = async (req, res) => {
@@ -157,5 +157,5 @@ module.exports = {
   getUserById,
   followUser,
   unfollowUser,
-  getUserByParams,
+  // getUserByParams,
 };
