@@ -107,14 +107,23 @@ const getTimelinePosts = async (req, res) => {
     let availablePost = [];
 
     const currentUser = await User.findOne({ _id: userID });
-    const currentUserPosts = await Post.findOne({ userID: userID });
+    const currentUserPosts = await Post.find({ userID: userID });
+    currentUserPosts.forEach((post) => {
+      availablePost.push(post);
+    });
 
-    availablePost.push(currentUserPosts);
+    // availablePost.push(currentUserPosts);
 
     await Promise.all(
       currentUser.followers.map(async (friendID) => {
         const eachPost = await Post.findOne({ userID: friendID });
         availablePost.push(eachPost);
+        availablePost.sort((prevPost, nexPost) => {
+          let datePrevPost = new Date(prevPost.createdAt).getTime();
+          let dateNexPost = new Date(nexPost.createdAt).getTime();
+
+          return datePrevPost - dateNexPost;
+        });
       })
     );
 
