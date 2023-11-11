@@ -112,17 +112,15 @@ const getTimelinePosts = async (req, res) => {
       availablePost.push(post);
     });
 
-    // availablePost.push(currentUserPosts);
-
     await Promise.all(
-      currentUser.followers.map(async (friendID) => {
+      currentUser.following.map(async (friendID) => {
         const eachPost = await Post.findOne({ userID: friendID });
         availablePost.push(eachPost);
-        availablePost.sort((prevPost, nexPost) => {
+        availablePost.sort((prevPost, nextPost) => {
           let datePrevPost = new Date(prevPost.createdAt).getTime();
-          let dateNexPost = new Date(nexPost.createdAt).getTime();
+          let dateNexPost = new Date(nextPost.createdAt).getTime();
 
-          return datePrevPost - dateNexPost;
+          return dateNexPost - datePrevPost;
         });
       })
     );
@@ -136,10 +134,18 @@ const getTimelinePosts = async (req, res) => {
 // get all posts/profile
 const getProfilePosts = async (req, res) => {
   const { username } = req.params;
+  let postsArray = [];
 
   try {
     const user = await User.findOne({ username: username });
     const posts = await Post.find({ userID: user._id });
+
+    posts.sort((prevPost, nextPost) => {
+      let datePrevPost = new Date(prevPost.createdAt).getTime();
+      let dateNextPost = new Date(nextPost.createdAt).getTime();
+
+      return dateNextPost - datePrevPost;
+    });
 
     res.status(StatusCodes.OK).send(posts);
   } catch (error) {

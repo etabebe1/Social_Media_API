@@ -35,19 +35,19 @@ const storage = multer.diskStorage({
   },
 
   filename: (req, file, cb) => {
-    
-    cb(null, file.originalname);
-    console.log(req.body);
+    //*/ Creating a unique prefix for naming file /*/
+
+    const fileName = `${Date.now()}_${Math.round(Math.random() * 1e9)}_${
+      file.originalname
+    }`;
+    cb(null, fileName);
   },
 });
 
 const upload = multer({ storage });
 app.post("/api/upload", upload.single("file"), (req, res) => {
   try {
-    console.log(req);
-
-    return res.status(200).json("File uploaded successfully.");
-    // return res.status(200).json(req.file.filename);
+    return res.status(200).json(req.file);
   } catch (error) {
     console.log(error);
   }

@@ -7,13 +7,12 @@ const {
   getUserById,
   followUser,
   unfollowUser,
-  // getUserByParams,
+  followingFriends,
 } = require("../controller/user");
 
 router.route("/").get(getUserById);
-// router.route("/:id").get(getUserByParams).put(updateUser).delete(deleteUser);
 router.route("/:id").put(updateUser).delete(deleteUser);
 router.route("/:id/follow").put(followUser);
 router.route("/:id/unfollow").put(unfollowUser);
-
+router.route("/friends/:id").get(followingFriends);
 module.exports = router;

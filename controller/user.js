@@ -79,18 +79,31 @@ const getUserById = async (req, res) => {
   }
 };
 
-// get a user by parameter
-// const getUserByParams = async (req, res) => {
-//   const { id } = req.params;
+// get following users of a user
+const followingFriends = async (req, res) => {
+  var { id } = req.params;
 
-//   const user = await User.findOne({ _id: id });
-//   if (!user) {
-//     throw new NotFoundError("User not found");
-//   }
+  try {
+    const currentUser = await User.findOne({ _id: id });
 
-//   const { password, updatedAt, ...other } = user._doc;
-//   res.send(other);
-// };
+    const friends = await Promise.all(
+      currentUser.following.map((friendID) => {
+        return User.findOne({ _id: friendID });
+      })
+    );
+
+    let friendList = [];
+
+    friends.map((individualFriend) => {
+      const { _id, username, profile } = individualFriend;
+      friendList.push({ _id, username, profile });
+    });
+
+    res.status(StatusCodes.OK).json(friendList);
+  } catch (error) {
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(error);
+  }
+};
 
 // follow user
 const followUser = async (req, res) => {
@@ -157,5 +170,5 @@ module.exports = {
   getUserById,
   followUser,
   unfollowUser,
-  // getUserByParams,
+  followingFriends,
 };
