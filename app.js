@@ -9,6 +9,8 @@ const morgan = require("morgan");
 const userRouter = require("./routes/user");
 const authRouter = require("./routes/auth");
 const postRouter = require("./routes/post");
+const conversationRouter = require("./routes/conversation");
+const messageRouter = require("./routes/message");
 
 const multer = require("multer");
 const path = require("path");
@@ -64,6 +66,9 @@ app.post("/api/upload", upload.single("file"), (req, res) => {
 app.use("/api/users", userRouter);
 app.use("/api/authentication", authRouter);
 app.use("/api/posts", postRouter);
+app.use("/api/conversation", conversationRouter);
+app.use("/api/message", messageRouter);
+// TODO: use required conversation and message router to render to the front-end
 
 // port
 const port = process.env.PORT || 5000;
