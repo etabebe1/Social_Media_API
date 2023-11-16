@@ -30,9 +30,7 @@ const login = async (req, res) => {
     throw new UnauthenticatedError("Wrong Password");
   }
 
-  res.status(StatusCodes.OK).json({
-    user,
-  });
+  res.status(StatusCodes.OK).json(user);
 };
 
 module.exports = { register, login };
